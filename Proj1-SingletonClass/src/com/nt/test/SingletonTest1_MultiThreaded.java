@@ -11,14 +11,9 @@ public class SingletonTest1_MultiThreaded {
 		   Thread t1=new Thread(servlet);
 		   Thread t2=new Thread(servlet);
 		   Thread t3=new Thread(servlet);
-          long start=System.currentTimeMillis();
 		   t1.start();
 		   t2.start();
 		   t3.start();
-		   long end=System.currentTimeMillis();
-		   System.out.println("time:"+(end-start));
-		   
-		   
 		
 		}//main
 }//class
