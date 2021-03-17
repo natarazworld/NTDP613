@@ -1,63 +1,41 @@
-//Printer.java
+//Printer1.java
 package com.nt.sdp;
 
 import com.nt.commons.CommonsUtil;
 
-public class Printer extends CommonsUtil {
-	private static volatile Printer INSTANCE;
-	//private static Printer INSTANCE=new Printer();  //eager Instantiation.
-	
+public class Printer1 extends CommonsUtil {
+	private static volatile Printer1 INSTANCE;
+
 	//private constructor
-	private  Printer() {
-		/*if(InnerPrinter.INSTANCE!=null)
-			 throw new RuntimeException("object is already created!!!");*/
+	private  Printer1() {
 		  if(INSTANCE!=null) {
 			  throw new RuntimeException("object is already created!!!");
 		  }
 		System.out.println("Printer:: 0-param constructor");
 	} //constructor
 	
-	/*	//static  factory method
-		public synchronized static   Printer  getInstance() {
-			 //singleton logic
-			  if(INSTANCE==null)
-				  INSTANCE=new Printer();
-			  
-			  return INSTANCE;
-		}  //method 
-	*/	
-	
 	//static  factory method
-		public  static   Printer  getInstance() {
+		public  static   Printer1  getInstance() {
 			 if(INSTANCE==null) { //1st NULL check	
-				synchronized(Printer.class) {
+				synchronized(Printer1.class) {
 				 //singleton logic
 				  if(INSTANCE==null)  //2nd NULL check
-					  INSTANCE=new Printer();
+					  INSTANCE=new Printer1();
 				}
 			}
 				  return INSTANCE;
-			}  //method 
-	
-			/*private static class InnerPrinter{
-				private static volatile Printer INSTANCE=new Printer();
-			}
-			//factory method
-			public  static Printer getInstance() {
-				return InnerPrinter.INSTANCE;
-			}*/
+		}  //method 
 	
 	//To  Stop Cloning
 	@Override
 	public  Object clone()throws CloneNotSupportedException  {
 		throw new CloneNotSupportedException("Cloning not allowed in Singleton Printer classs");
-		//return InnerPrinter.INSTANCE;
+		 //return INSTANCE; 
 	}
 	
 	//To Stop DeSerialization
 	private static  final long serialVersionUID=5354353L;
 	public  Object readResolve() {
-		//return InnerPrinter.INSTANCE;
 		return  INSTANCE;
 		//throw  new  IllegalArgumentException("Derailziation is not allowed on singleton class");
 	}
