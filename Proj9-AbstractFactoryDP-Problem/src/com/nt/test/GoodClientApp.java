@@ -1,3 +1,4 @@
+//GoodClient.java
 package com.nt.test;
 
 import com.nt.dao.DAO;
