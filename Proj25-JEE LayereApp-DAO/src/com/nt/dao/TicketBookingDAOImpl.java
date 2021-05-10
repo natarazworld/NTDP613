@@ -8,24 +8,35 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.nt.bo.TicketBookingDetailsBO;
 import com.nt.factory.ConnectionFactory;
 
 public class TicketBookingDAOImpl implements ITicketBookingDAO {
 	private static final String  INSERT_MOVIE_TICKET_BOOKINGS_QUERY="INSERT INTO MOVIE_TICKET_BOOKINGS VALUES(TICKETID_SEQ.NEXTVAL,?,?,?,?,?)";
-	private static Properties props; 
+	private static Properties props;
+	private static Logger logger=Logger.getLogger(TicketBookingDAOImpl.class);
 	static {
 		try {
+			//activate  log4j  by loading its log4j.properties file
+			PropertyConfigurator.configure("src/com/nt/commons/log4j.properties");
+			logger.debug("Log4j activated");
 			//Load properties file
 			InputStream is=new FileInputStream("src/com/nt/commons/jdbc.properties");
+			logger.debug("jdbc properties file loaded");
 			//load properties file info to java.util.Properties class obj
 			props=new Properties();
 			props.load(is);
+			logger.debug("jdbc properties file info is copied to  java.util.Properties class object");
 		}
 		catch(IOException ioe) {
+			logger.error("propblem in locating jdbc.propperties file");
 			ioe.printStackTrace();
 		}
 		catch(Exception e) {
+			logger.error("unpropblem in locating jdbc.propperties file");
 			e.printStackTrace();
 		}
 	}//static block
@@ -84,6 +95,7 @@ public class TicketBookingDAOImpl implements ITicketBookingDAO {
 	@Override
 	public int insert(TicketBookingDetailsBO bo) throws Exception {
 		int count=0;
+		logger.debug(" insert(-) of  TicketBookingDAOImpl class");
        try( //get JDBC connection using Connection Factory
     	    Connection con=ConnectionFactory.makeConenction(props.getProperty("jdbc.url"),
     			                                                                                       props.getProperty("db.user"),
@@ -91,6 +103,9 @@ public class TicketBookingDAOImpl implements ITicketBookingDAO {
     		   //create PrpearedSatetement obj
        	    PreparedStatement ps=con.prepareStatement(INSERT_MOVIE_TICKET_BOOKINGS_QUERY);
     		   ){
+    	   logger.info(" jdbc con is gathered from  Connection factory");
+    	   logger.debug(" PreparedStatement obj is created having pre-compiled SQL query");
+
 
     	    //set values to Query params
     	    ps.setString(1,bo.getCustName());
@@ -98,14 +113,18 @@ public class TicketBookingDAOImpl implements ITicketBookingDAO {
     	    ps.setString(3, bo.getTicketType());
     	    ps.setString(4, bo.getSeatNos());
     	    ps.setFloat(5, bo.getBillAmount());
+    	    logger.debug(" Values are set to pre-compiled SQL Query parameters");
     	    //execute the Query
     	     count=ps.executeUpdate();
+    	     logger.info("pre-compiled SQL query is executed");
        }//try
        catch(SQLException se) {
+    	   logger.error("problem in  JDBC code execution");
     	   se.printStackTrace();
     	   throw se;
        }
        catch(Exception e) {
+    	   logger.fatal("unknwon problem in  JDBC code execution");
     	   e.printStackTrace();
     	   throw e;
        }
